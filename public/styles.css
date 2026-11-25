@@ -54,21 +54,21 @@ ul.clean li{padding:6px 0;border-bottom:1px solid var(--line)} ul.clean li:last-
 /* calendar */
 .calhead{display:flex;justify-content:space-between;align-items:center;margin:6px 0}
 .calhead button{background:none;border:0;font-size:1.4rem;color:var(--brand);padding:6px 12px;cursor:pointer}
-.calhead b{text-transform:capitalize}
+.calhead b{}
 .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
 .dow{text-align:center;font-size:.72rem;color:var(--muted);padding:4px 0}
-.cell{aspect-ratio:1;border-radius:12px;border:2px solid transparent;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;cursor:pointer;padding:0;font-size:.95rem;color:var(--ink)}
+.cell{aspect-ratio:1;border-radius:50%;border:2px solid transparent;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;cursor:pointer;padding:0;font-size:1rem;color:var(--ink);margin:2px}
 .cell.empty{pointer-events:none}
-.cell.period{background:var(--menstrual);color:#fff;font-weight:700}
-.cell.pred{background:repeating-linear-gradient(45deg,var(--soft),var(--soft) 5px,transparent 5px,transparent 9px);border-color:var(--menstrual);border-style:dashed}
-.cell.fertile{background:rgba(47,165,143,.2)}
-.cell.ovu{background:rgba(240,160,60,.35);font-weight:700}
+.cell.period{background:#f4489a;color:#fff;font-weight:700}
+.cell.pred{background:#ffc2d8;color:#7a1f45}
+.cell.fertile{background:#b79be6;color:#fff;font-weight:600}
+.cell.ovu{background:#8e6fd0;color:#fff;font-weight:700}
 .cell.pms{background:rgba(178,85,156,.16)}
-.cell.today{border-color:var(--ink);border-style:solid}
-.cell .mk{position:absolute;bottom:3px;width:5px;height:5px;border-radius:50%;background:var(--brand)}
-.cell.period .mk{background:#fff}
+.cell.today{border-color:var(--ink);box-shadow:0 0 0 2px var(--card) inset}
+.cell .mk{position:absolute;bottom:4px;width:5px;height:5px;border-radius:50%;background:var(--brand)}
+.cell.period .mk,.cell.fertile .mk,.cell.ovu .mk{background:#fff}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.78rem;color:var(--muted);margin-top:10px}
-.legend i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:5px;vertical-align:-2px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:5px;vertical-align:-2px}
 /* chart */
 svg.chart{width:100%;height:auto;display:block}
 .lg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.8rem;margin-top:6px}

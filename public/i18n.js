@@ -21,7 +21,7 @@ en: {
   meterHint: 'Typical tendencies for this point of the cycle — not a diagnosis.',
   hl: { sens_hi: '\u{1F97A} Extra sensitive / needy', libido_hi: '\u{1F525} High desire', mood_lo: '\u{1F327}️ Mood dip', energy_lo: '\u{1F50B} Low energy', energy_hi: '⚡ High energy', mood_hi: '☀️ Good mood' },
   legend: { period: 'Period', predicted: 'Predicted', fertile: 'Fertile', ovulation: 'Ovulation', pms: 'Sensitive days', logged: 'Logged' },
-  cal: { future: 'Forecast for this day', noData: 'Nothing known yet for this date.' },
+  cal: { endsIn: 'Your period should end in {n} days', endsToday: 'Your period should end today', nextIn: 'Next period {when}', future: 'Forecast for this day', noData: 'Nothing known yet for this date.' },
   log: {
     title: 'How are you?', first: 'First day of my period', flow: 'Flow', mood: 'Feelings', body: 'Body', energy: 'Energy', desire: 'Desire', note: 'Notes', notePh: 'Anything you want to remember…', save: 'Save', cancel: 'Close', remove: 'Clear this day',
     flows: { none: 'None', spotting: 'Spotting', light: 'Light', medium: 'Medium', heavy: 'Heavy' },
@@ -99,8 +99,8 @@ pt: {
   meters: { energy: 'Energia', mood: 'Humor', libido: 'Desejo', sens: 'Sensibilidade' },
   meterHint: 'Tendências típicas para este ponto do ciclo — não é diagnóstico.',
   hl: { sens_hi: '\u{1F97A} Mais sensível / carente', libido_hi: '\u{1F525} Desejo alto', mood_lo: '\u{1F327}️ Humor baixo', energy_lo: '\u{1F50B} Pouca energia', energy_hi: '⚡ Muita energia', mood_hi: '☀️ Bom humor' },
-  legend: { period: 'Menstruação', predicted: 'Prevista', fertile: 'Fértil', ovulation: 'Ovulação', pms: 'Dias sensíveis', logged: 'Registrado' },
-  cal: { future: 'Previsão para este dia', noData: 'Ainda não há informação para esta data.' },
+  legend: { period: 'Menstruação', predicted: 'Período previsto', fertile: 'Período fértil', ovulation: 'Dia da ovulação', pms: 'Dias sensíveis', logged: 'Registrado' },
+  cal: { endsIn: 'A menstruação deverá terminar em {n} dias', endsToday: 'A menstruação deverá terminar hoje', nextIn: 'Próxima menstruação {when}', future: 'Previsão para este dia', noData: 'Ainda não há informação para esta data.' },
   log: {
     title: 'Como você está?', first: 'Primeiro dia da menstruação', flow: 'Fluxo', mood: 'Sentimentos', body: 'Corpo', energy: 'Energia', desire: 'Desejo', note: 'Anotações', notePh: 'Algo que queira lembrar…', save: 'Salvar', cancel: 'Fechar', remove: 'Limpar este dia',
     flows: { none: 'Nenhum', spotting: 'Escape', light: 'Leve', medium: 'Médio', heavy: 'Intenso' },

@@ -16,7 +16,7 @@ let user = null, state = null, tab = 'today', calMonth = todayStr().slice(0, 7);
 let sheetDate = null, draft = null, online = true, pushTimer = null;
 
 const blank = () => ({ v: 1, updatedAt: 0, settings: { cycleLen: 28, periodLen: 5, lang: '' }, starts: [], logs: {} });
-const lang = () => state.settings.lang || ((navigator.language || 'en').toLowerCase().startsWith('pt') ? 'pt' : 'en');
+const lang = () => state.settings.lang || 'pt';
 const L = () => window.I18N[lang()] || window.I18N.en;
 const fmt = (s, v = {}) => String(s).replace(/\{(\w+)\}/g, (_, k) => v[k]);
 const fmtDate = (s, o) => new Intl.DateTimeFormat(lang() === 'pt' ? 'pt-BR' : 'en-GB', o).format(C.parse(s));
@@ -176,11 +176,15 @@ function viewCalendar() {
     const has = log && (log.moods?.length || log.symptoms?.length || log.note || log.energy || log.desire);
     cells += `<button class="${cls.join(' ')}" data-act="log" data-v="${ds}">${d}${has ? '<i class="mk"></i>' : ''}</button>`;
   }
-  const lg = [['period', PH_COLOR.menstrual, 'period'], ['predicted', 'transparent;border:2px dashed ' + PH_COLOR.menstrual, 'predicted'], ['fertile', 'rgba(47,165,143,.4)', 'fertile'],
-    ['ovulation', 'rgba(240,160,60,.6)', 'ovulation'], ['pms', 'rgba(178,85,156,.35)', 'pms']]
+  const lg = [['period', '#f4489a'], ['predicted', '#ffc2d8'], ['fertile', '#b79be6'], ['ovulation', '#8e6fd0'], ['pms', 'rgba(178,85,156,.25)']]
     .map(([k, bg]) => `<span><i style="background:${bg}"></i>${t.legend[k]}</span>`).join('');
-  return header(t.tabs.calendar) + `<div class="card"><div class="calhead"><button data-act="month" data-v="-1" aria-label="prev">‹</button>
-    <b>${fmtDate(calMonth + '-01', { month: 'long', year: 'numeric' })}</b><button data-act="month" data-v="1" aria-label="next">›</button></div>
+  const nowInf = C.infoFor(M, T);
+  let banner = '';
+  if (nowInf && M.late) banner = fmt(t.late.title, { n: M.late });
+  else if (nowInf && nowInf.phase === 'menstrual' && C.hasFlow(state.logs[T])) { const n = M.avgPeriod - nowInf.cycleDay; banner = n > 0 ? fmt(t.cal.endsIn, { n }) : t.cal.endsToday; }
+  else if (nowInf) banner = fmt(t.cal.nextIn, { when: t.inDays(C.diff(M.nextStart, T)) });
+  return header(t.tabs.calendar) + (banner ? `<div class="card" style="background:var(--soft);display:flex;gap:10px;align-items:center">\u{1F4E3} <span>${banner}</span></div>` : '') + `<div class="card"><div class="calhead"><button data-act="month" data-v="-1" aria-label="prev">‹</button>
+    <b>${cap(fmtDate(calMonth + '-01', { month: 'long', year: 'numeric' }).replace(' de ', ' '))}</b><button data-act="month" data-v="1" aria-label="next">›</button></div>
     <div class="grid">${dows.map((d) => `<div class="dow">${d}</div>`).join('')}${cells}</div><div class="legend">${lg}</div></div>`;
 }
 
@@ -246,9 +250,9 @@ function viewInsights() {
 
 function viewSettings() {
   const t = L(), s = t.settings, st = state.settings;
-  const opt = (v, l) => `<option value="${v}" ${(st.lang || '') === v ? 'selected' : ''}>${l}</option>`;
+  const opt = (v, l) => `<option value="${v}" ${lang() === v ? 'selected' : ''}>${l}</option>`;
   return header(s.title) + `<div class="card"><label class="field"><span>${s.language}</span>
-    <select data-set="lang">${opt('', 'Auto')}${opt('en', 'English')}${opt('pt', 'Português (Brasil)')}</select></label>
+    <select data-set="lang">${opt('en', 'English')}${opt('pt', 'Português (Brasil)')}</select></label>
     <label class="field"><span>${s.cycle}</span><input type="number" min="21" max="45" data-set="cycleLen" value="${st.cycleLen}"></label>
     <label class="field"><span>${s.period}</span><input type="number" min="2" max="10" data-set="periodLen" value="${st.periodLen}"></label>
     <p class="muted small">${s.cycleNote}</p></div>
