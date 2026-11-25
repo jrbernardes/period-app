@@ -21,7 +21,13 @@ Change/add users: `node scripts/set-password.js <user> <password>`.
 - `server.js` – login (scrypt, signed HttpOnly cookie, rate-limited) + per-user JSON storage.
 - Data is saved on the phone first (works offline) and synced to the server; the newest copy wins, so a free host that wipes its disk is restored from the phone on next open.
 
-## Hosting
+## Free hosting on GitHub Pages (testing)
+Static mode: no server, data stays on the phone, login is only a gate (`scripts/static-users.js` regenerates it).
+1. Merge this branch into `main`.
+2. Repo **Settings → Pages → Source: GitHub Actions**. (Free accounts need a *public* repo.)
+3. Wait for the "Deploy to GitHub Pages" action; the URL is `https://<user>.github.io/period-app/`.
+
+## Hosting with a server
 Needs a Node host (static-only hosting can't do the login). Free options:
 - **Render** (free web service, sleeps when idle ~30–60 s first load): `render.yaml` included, New → Blueprint.
 - **Koyeb / Fly.io / Railway**: use the included `Dockerfile`.

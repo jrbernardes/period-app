@@ -13,7 +13,7 @@ const CURVE_COLOR = { energy: '#f0a03c', mood: '#2fa58f', libido: '#e0446a', sen
 const SCALE_EMO = ['\u{1F634}', '\u{1F615}', '\u{1F642}', '\u{1F60A}', '\u{1F929}'];
 
 let user = null, state = null, tab = 'today', calMonth = todayStr().slice(0, 7);
-let sheetDate = null, draft = null, online = true, pushTimer = null;
+let sheetDate = null, draft = null, online = true, pushTimer = null, staticMode = false;
 
 const blank = () => ({ v: 1, updatedAt: 0, settings: { cycleLen: 28, periodLen: 5, lang: '' }, starts: [], logs: {} });
 const lang = () => state.settings.lang || 'pt';
@@ -35,15 +35,17 @@ async function api(path, opts = {}) {
   return r;
 }
 async function push() {
+  if (staticMode) return;
   try {
-    const r = await api('/api/data', { method: 'PUT', body: JSON.stringify(state), keepalive: true });
+    const r = await api('api/data', { method: 'PUT', body: JSON.stringify(state), keepalive: true });
     if (r.status === 401) return showLogin();
     online = r.ok;
   } catch { online = false; }
 }
 async function pull() {
+  if (staticMode) return;
   try {
-    const r = await api('/api/data');
+    const r = await api('api/data');
     if (r.status === 401) return showLogin();
     const { data } = await r.json();
     online = true;
@@ -56,14 +58,26 @@ async function pull() {
 async function boot() {
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
   try {
-    const r = await api('/api/me');
+    const r = await api('api/me');
     if (r.ok) { user = (await r.json()).user; localStorage.setItem('luna:last', user); return start(); }
-    return showLogin();
+    if (r.status === 401) return showLogin();
+    staticMode = true; // no server behind this URL (e.g. GitHub Pages)
   } catch {
     const last = localStorage.getItem('luna:last');
     if (last) { user = last; online = false; return start(false); }
     return showLogin();
   }
+  const u = localStorage.getItem('luna:static-session');
+  if (u) { user = u; return start(false); }
+  return showLogin();
+}
+async function staticLogin(name, pw) {
+  const rec = (window.STATIC_USERS || {})[name.trim().toLowerCase()];
+  if (!rec) return null;
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', iterations: rec.iter, salt: new TextEncoder().encode(rec.salt) }, key, 256);
+  const hex = [...new Uint8Array(bits)].map((b) => b.toString(16).padStart(2, '0')).join('');
+  return hex === rec.hash ? name.trim().toLowerCase() : null;
 }
 async function start(sync = true) {
   state = loadLocal();
@@ -86,8 +100,13 @@ function showLogin(msg = '') {
   $('#lf').onsubmit = async (e) => {
     e.preventDefault();
     const f = new FormData(e.target);
+    if (staticMode) {
+      const u = await staticLogin(f.get('username') || '', f.get('password') || '');
+      if (!u) return ($('#err').textContent = t.login.invalid);
+      user = u; localStorage.setItem('luna:static-session', u); return start(false);
+    }
     try {
-      const r = await api('/api/login', { method: 'POST', body: JSON.stringify({ user: f.get('username'), password: f.get('password') }) });
+      const r = await api('api/login', { method: 'POST', body: JSON.stringify({ user: f.get('username'), password: f.get('password') }) });
       if (r.ok) { user = (await r.json()).user; localStorage.setItem('luna:last', user); return start(); }
       $('#err').textContent = r.status === 429 ? t.login.many : t.login.invalid;
     } catch { $('#err').textContent = t.login.net; }
@@ -257,7 +276,7 @@ function viewSettings() {
     <label class="field"><span>${s.period}</span><input type="number" min="2" max="10" data-set="periodLen" value="${st.periodLen}"></label>
     <p class="muted small">${s.cycleNote}</p></div>
     <div class="card"><h3>${s.account}</h3><p>${fmt(s.signedAs, { name: esc(user) })}</p>
-    <p class="muted small">${online ? s.sync.ok : s.sync.offline}</p>
+    <p class="muted small">${staticMode ? s.sync.local : online ? s.sync.ok : s.sync.offline}</p>
     <button class="btn ghost" data-act="logout">${s.logout}</button></div>
     <div class="card"><h3>${s.data}</h3><button class="btn alt" data-act="export">${s.export}</button>
     <button class="btn danger" data-act="wipe">${s.wipe}</button></div>
@@ -335,7 +354,7 @@ document.addEventListener('click', (e) => {
     const d = $('#firstDate').value || todayStr(); if (d > todayStr()) return;
     state.starts = [d]; state.logs[d] = Object.assign({}, state.logs[d], { flow: 'medium' }); persist(); render();
   }
-  else if (act === 'logout') { api('/api/logout', { method: 'POST' }).finally(() => { localStorage.removeItem('luna:last'); showLogin(); }); }
+  else if (act === 'logout') { (staticMode ? Promise.resolve() : api('api/logout', { method: 'POST' })).finally(() => { localStorage.removeItem('luna:last'); localStorage.removeItem('luna:static-session'); showLogin(); }); }
   else if (act === 'export') {
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' }));
     a.download = 'luna-' + todayStr() + '.json'; a.click();

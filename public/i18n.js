@@ -38,7 +38,7 @@ en: {
   },
   settings: {
     title: 'Settings', language: 'Language', cycle: 'Usual cycle length (days)', period: 'Usual period length (days)', cycleNote: 'Used until I’ve learned from your history.',
-    account: 'Account', signedAs: 'Signed in as {name}', logout: 'Sign out', sync: { ok: 'Saved on this phone and in your account', offline: 'Saved on this phone — will sync when online' },
+    account: 'Account', signedAs: 'Signed in as {name}', logout: 'Sign out', sync: { local: 'Saved only on this phone (not sent anywhere)', ok: 'Saved on this phone and in your account', offline: 'Saved on this phone — will sync when online' },
     data: 'Your data', export: 'Download my data', wipe: 'Delete all my data', wipeAsk: 'Delete ALL your logs and periods? This cannot be undone.',
     install: 'Tip: add this app to your home screen (Share → Add to Home Screen on iPhone; ⋮ → Install app on Android).',
     about: 'About & sources',
@@ -117,7 +117,7 @@ pt: {
   },
   settings: {
     title: 'Ajustes', language: 'Idioma', cycle: 'Duração usual do ciclo (dias)', period: 'Duração usual da menstruação (dias)', cycleNote: 'Usado até eu aprender com o seu histórico.',
-    account: 'Conta', signedAs: 'Conectada como {name}', logout: 'Sair', sync: { ok: 'Salvo neste celular e na sua conta', offline: 'Salvo neste celular — sincroniza quando houver internet' },
+    account: 'Conta', signedAs: 'Conectada como {name}', logout: 'Sair', sync: { local: 'Salvo apenas neste celular (não é enviado a lugar nenhum)', ok: 'Salvo neste celular e na sua conta', offline: 'Salvo neste celular — sincroniza quando houver internet' },
     data: 'Seus dados', export: 'Baixar meus dados', wipe: 'Apagar todos os meus dados', wipeAsk: 'Apagar TODOS os seus registros e menstruações? Não dá para desfazer.',
     install: 'Dica: adicione o app à tela inicial (iPhone: Compartilhar → Adicionar à Tela de Início; Android: ⋮ → Instalar app).',
     about: 'Sobre e fontes',

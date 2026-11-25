@@ -1,7 +1,8 @@
 {
   "name": "Luna – cycle diary",
   "short_name": "Luna",
-  "start_url": "/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#fff5f7",
   "theme_color": "#d94f70",
