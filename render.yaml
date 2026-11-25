@@ -1,0 +1,13 @@
+# One-click free hosting on Render: New > Blueprint > pick this repo.
+services:
+  - type: web
+    name: luna-period-app
+    runtime: node
+    plan: free
+    buildCommand: "true"
+    startCommand: node server.js
+    envVars:
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: DATA_DIR
+        value: /tmp/luna-data
