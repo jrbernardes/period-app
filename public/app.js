@@ -127,13 +127,18 @@ const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 const bars = (c) => ['energy', 'mood', 'libido', 'sens'].map((k) =>
   `<div class="meter"><span>${L().meters[k]}</span><div class="bar"><i style="width:${Math.round(c[k] * 100)}%;background:${CURVE_COLOR[k]}"></i></div></div>`).join('');
 
+function onboardCard() {
+  const t = L(), T = todayStr();
+  return `<div class="card"><h2>${t.welcome.title}</h2><p>${t.welcome.text}</p>
+    <label class="field"><span>${t.welcome.when}</span><input type="date" id="firstDate" max="${T}" value="${T}"></label>
+    <button class="btn" data-act="firstSave">${t.welcome.save}</button></div>`;
+}
+
 function viewToday() {
   const t = L(), M = model(), T = todayStr();
   const hi = header(fmt(t.hi, { name: esc(cap(user)) }));
   if (!M.last) {
-    return hi + `<div class="card"><h2>${t.welcome.title}</h2><p>${t.welcome.text}</p>
-      <label class="field"><span>${t.welcome.when}</span><input type="date" id="firstDate" max="${T}" value="${T}"></label>
-      <button class="btn" data-act="firstSave">${t.welcome.save}</button></div>`;
+    return hi + onboardCard();
   }
   const inf = C.infoFor(M, T);
   const ph = t.phases[inf.phase];
@@ -156,6 +161,7 @@ function viewToday() {
   h += `<div class="card"><h3>\u{1F4AD} ${t.feelings}</h3><ul class="clean">${ph.feel.map((f) => `<li>${f}</li>`).join('')}</ul></div>`;
   h += `<div class="card"><h3>\u{1F49C} ${t.selfcare}</h3><ul class="clean">${ph.tips.map((f) => `<li>${f}</li>`).join('')}</ul></div>`;
   h += upNext(M, T);
+  h += `<div class="card"><h3>\u{1F4C6} ${t.startOther}</h3><div class="row"><input type="date" id="otherDate" max="${T}" value="${T}"><button class="btn alt" style="flex:none;width:auto" data-act="startOn">${t.startOtherBtn}</button></div></div>`;
   return h;
 }
 
@@ -176,6 +182,7 @@ function upNext(M, T) {
 
 function viewCalendar() {
   const t = L(), M = model(), T = todayStr();
+  if (!M.last) return header(t.tabs.calendar) + onboardCard();
   const [y, mo] = calMonth.split('-').map(Number);
   const first = new Date(y, mo - 1, 1, 12), days = new Date(y, mo, 0).getDate();
   const loc = lang() === 'pt' ? 'pt-BR' : 'en-GB';
@@ -238,7 +245,7 @@ function chartSVG(M, T) {
 
 function viewInsights() {
   const t = L(), M = model(), T = todayStr();
-  if (!M.last) return header(t.tabs.insights) + `<div class="card"><p>${t.welcome.text}</p></div>`;
+  if (!M.last) return header(t.tabs.insights) + onboardCard();
   let h = header(t.tabs.insights);
   h += `<div class="card"><h2>${t.insights.chart}</h2><p class="muted small" style="margin-top:-4px">${t.insights.chartSub}</p>${chartSVG(M, T)}
     <div class="lg">${['energy', 'mood', 'libido', 'sens'].map((k) => `<span><b style="background:${CURVE_COLOR[k]}"></b>${t.meters[k]}</span>`).join('')}</div></div>`;
@@ -349,6 +356,12 @@ document.addEventListener('click', (e) => {
     const T = todayStr(); if (!state.starts.includes(T)) state.starts.push(T); state.starts.sort();
     state.logs[T] = Object.assign({}, state.logs[T], { flow: (state.logs[T] || {}).flow && state.logs[T].flow !== 'none' ? state.logs[T].flow : 'medium' });
     persist(); render(); openLog(T);
+  }
+  else if (act === 'startOn') {
+    const d = $('#otherDate').value; if (!d || d > todayStr()) return;
+    if (!state.starts.includes(d)) state.starts.push(d); state.starts.sort();
+    state.logs[d] = Object.assign({}, state.logs[d], { flow: (state.logs[d] || {}).flow && state.logs[d].flow !== 'none' ? state.logs[d].flow : 'medium' });
+    persist(); render(); openLog(d);
   }
   else if (act === 'firstSave') {
     const d = $('#firstDate').value || todayStr(); if (d > todayStr()) return;
