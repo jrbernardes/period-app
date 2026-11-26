@@ -55,15 +55,15 @@ ul.clean li{padding:6px 0;border-bottom:1px solid var(--line)} ul.clean li:last-
 .calhead{display:flex;justify-content:space-between;align-items:center;margin:6px 0}
 .calhead button{background:none;border:0;font-size:1.4rem;color:var(--brand);padding:6px 12px;cursor:pointer}
 .calhead b{}
-.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
 .dow{text-align:center;font-size:.72rem;color:var(--muted);padding:4px 0}
-.cell{aspect-ratio:1;border-radius:50%;border:2px solid transparent;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;cursor:pointer;padding:0;font-size:1rem;color:var(--ink);margin:2px}
+.cell{width:100%;min-width:0;aspect-ratio:1;border-radius:50%;border:2px solid transparent;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;cursor:pointer;padding:0;font-size:1rem;color:var(--ink);margin:0}
 .cell.empty{pointer-events:none}
 .cell.period{background:#f4489a;color:#fff;font-weight:700}
 .cell.pred{background:#ffc2d8;color:#7a1f45}
 .cell.fertile{background:#b79be6;color:#fff;font-weight:600}
 .cell.ovu{background:#8e6fd0;color:#fff;font-weight:700}
-.cell.pms{background:rgba(178,85,156,.16)}
+.cell.pms{background:rgba(178,85,156,.28)}
 .cell.today{border-color:var(--ink);box-shadow:0 0 0 2px var(--card) inset}
 .cell .mk{position:absolute;bottom:4px;width:5px;height:5px;border-radius:50%;background:var(--brand)}
 .cell.period .mk,.cell.fertile .mk,.cell.ovu .mk{background:#fff}

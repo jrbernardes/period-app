@@ -194,7 +194,7 @@ function viewCalendar() {
     const inf = C.infoFor(M, ds), log = state.logs[ds];
     const cls = ['cell'];
     if (C.hasFlow(log) || (log && log.flow === 'spotting')) cls.push('period');
-    else if (inf && inf.periodPredicted) cls.push('pred');
+    else if (inf && inf.phase === 'menstrual' && !inf.late && !(log && log.flow)) cls.push('pred');
     else if (inf && inf.ovulation && !inf.late) cls.push('ovu');
     else if (inf && inf.fertile && !inf.late) cls.push('fertile');
     else if (inf && inf.phase === 'premenstrual') cls.push('pms');

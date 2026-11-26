@@ -16,7 +16,9 @@
   /** Build the prediction model from saved state. `today` is YYYY-MM-DD. */
   function build(state, today) {
     const st = state.settings;
-    const starts = [...new Set(state.starts)].sort();
+    // Ignore a "start" within 15 days of the previous one (a typo or the same period logged twice).
+    const starts = [];
+    for (const d of [...new Set(state.starts)].sort()) if (!starts.length || diff(d, starts[starts.length - 1]) >= 15) starts.push(d);
     const lens = [];
     for (let i = 1; i < starts.length; i++) {
       const d = diff(starts[i], starts[i - 1]);

@@ -67,3 +67,10 @@ test('period length learned from logged flow days', () => {
   const m = C.build(mk(['2026-10-01', '2026-10-29'], { logs }), '2026-11-02');
   assert.strictEqual(m.avgPeriod, 4);
 });
+
+test('a start within 15 days of the previous one is ignored for predictions', () => {
+  const m = C.build(mk(['2026-11-21', '2026-11-26']), '2026-11-26');
+  assert.deepStrictEqual(m.starts, ['2026-11-21']);
+  assert.strictEqual(m.nextStart, '2026-12-19');
+  assert.ok(!C.infoFor(m, '2026-11-24').fertile);
+});
