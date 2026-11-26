@@ -1,0 +1,12 @@
+{
+  "name": "luna-period-app",
+  "version": "1.0.0",
+  "description": "Private menstrual-cycle diary and predictor (PWA + tiny Node server, zero dependencies)",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": { "node": ">=18" }
+}
